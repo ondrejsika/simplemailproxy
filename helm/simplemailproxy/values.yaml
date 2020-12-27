@@ -1,0 +1,5 @@
+# Required
+domainHostPortList:
+
+# Optional
+smtpNodePort:

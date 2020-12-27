@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    release: {{ .Release.Name }}
+  annotations:
+    x-required: |
+      {{ required "A valid .Values.domainHostPortList (list) entry required!" .Values.domainHostPortList |toJson | sha256sum }}
+spec:
+  serviceName: {{ .Release.Name }}
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: simplemailproxy
+          image: ondrejsika/simplemailproxy
+          imagePullPolicy: Always
+          {{if .Values.domainHostPortList}}
+          args:
+          {{ range .Values.domainHostPortList }}
+            - "{{ . }}"
+          {{ end }}
+          {{ end }}
+          ports:
+            - name: smtp
+              containerPort: 25
+              protocol: TCP

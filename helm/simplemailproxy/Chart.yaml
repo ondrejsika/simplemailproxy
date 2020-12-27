@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Simple Mail Proxy (for Maildev)
+name: simplemailproxy
+version: 1.0.0
